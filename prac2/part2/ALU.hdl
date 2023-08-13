@@ -25,6 +25,7 @@
 // if (no == 1) set out = !out   // bitwise not
 // if (out == 0) set zr = 1
 // if (out < 0) set ng = 1
+// 15th bit = 1 -> negative value. 15th bit = 0 -> positive value.
 
 CHIP ALU {
     IN  
@@ -43,4 +44,22 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+        Mux16(a=x, b=false, sel=zx, out=zdx);
+        Not16(in=zdx, out=nzdx);
+        Mux16(a=zdx, b=nzdx, sel=nx, out=nzx);
+        Mux16(a=y, b=false, sel=zy, out=zdy);
+        Not16(in=zdy, out=nzdy);
+        Mux16(a=zdy, b=nzdy, sel=ny, out=nzy);
+        Add16(a=nzx, b=nzy, out=add);
+        And16(a=nzx, b=nzy, out=and);
+        Mux16(a=and, b=add, sel=f, out=zf);
+        Not16(in=zf, out=nzf);
+        Mux16(a=zf, b=nzf, sel=no, out=out);
+        Mux16(a=zf, b=nzf, sel=no, out[0..7]=out1, out[8..15]=out2, out[15]=olast);
+        Or8Way(in=out1, out=or1);
+        Or8Way(in=out2, out=or2);
+        Or(a=or1, b=or2, out=or);
+        Mux(a=true, b=false, sel=or, out=zr);
+        Mux(a=false, b=true, sel=olast, out=ng);
+
 }
