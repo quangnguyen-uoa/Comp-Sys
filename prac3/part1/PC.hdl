@@ -1,5 +1,5 @@
-// This file is part of www.nand2tetris.org
-// and the book "The Elements of Computing Systems"
+// outMux file is part of www.nand2tetris.org
+// and the boutlastk "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
 // File name: projects/03/a/PC.hdl
 
@@ -17,4 +17,13 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
-}
+	Inc16(in=outlast,out=inc_out);
+
+	Mux16(a=outlast,b=inc_out,sel=inc,out=o);
+
+	Mux16(a=o,b=in,sel=load,out=uu);
+
+	Mux16(a=uu,b[0..15]=false,sel=reset,out=outMux);
+	
+	Register(in=outMux,load=true,out=out,out=outlast);
+} 
