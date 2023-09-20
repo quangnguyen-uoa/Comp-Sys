@@ -3,10 +3,10 @@
 
 // Put your code here.
 
-@R1 // the address of arr[0]
-D=M-1 // substract 1 because the array starts from arr[0]
-@R2 // the length
-M=M+D // now R2 is the address of the last element
+@R1 
+D=M-1 
+@R2 
+M=M+D 
 
 (LOOP1)
 (TERMINATION)
@@ -18,7 +18,7 @@ M=M+D // now R2 is the address of the last element
     D;JGT
     @R1
     D=M
-    @R3 // use R3 as the index of the inner loop.
+    @R3 
     M=D+1 
 
 
@@ -30,14 +30,14 @@ M=M+D // now R2 is the address of the last element
     D=D-M
     @LOOP2_END
     D;JGT
-    @R3 // use inner index to locate the element.
+    @R3 
     A=M
-    D=M // now D contains the element pointed by the inner index.
+    D=M 
     @CHECK_P
     D;JGE
     @CHECK_N
     0;JMP
-(SWITCH) // swap the value pointed by the inner and outer index pointer
+(SWITCH)
     @R1
     A=M
     D=M
@@ -74,26 +74,24 @@ M=M+D // now R2 is the address of the last element
     0;JMP
 
 (OUT_N)
-    // subs
     @R3
     A=M
     D=M
     @R1
     A=M
-    D=D-M // substraction, may cause Overflow!
+    D=D-M 
     @CONTINUE
     D;JGE
     @SWITCH
     0;JMP
 
 (OUT_P)
-    // subs
     @R3
     A=M
     D=M
     @R1
     A=M
-    D=D-M // substraction, may cause Overflow!
+    D=D-M 
     @CONTINUE
     D;JGE
     @SWITCH
