@@ -6,109 +6,84 @@
 // Multiplies R1 and R2 and stores the result in R0.
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
-// Put your code here.
-// @R0
-// M = 0
-// @R1
-// D = M
-// @STEP
-// D; JGT
-
-// @END
-// 0; JMP
-
-// (STEP)
-// @R0
-// D = M
-// @R2
-// D = D + M
-// @R0
-// M = D
-// @R1
-// D = M - 1
-// M = D
-// @STEP
-// D; JGT
-
-// (END)
-// @END
-// 0; JMP
 @sgn
-M=0
+M=0            // Initialize sgn (sign) flag to 0
+
 (R1_SGN)
 @R1
-D=M
+D=M            // Load the value in R1 into D
 @R1_A
-D;JLT
+D; JLT          // If it's negative (less than 0), jump to CHECK_R2
+
 (CHECK_R2)
 @R2
-D=M
+D=M            // Load the value in R2 into D
 @R2_A
-D;JLT
+D; JLT          // If it's negative (less than 0), jump to ENTRY
 
 (ENTRY)
 @R1
-D=M
+D=M            // Load the value in R1 into D
 @R2
-D=D-M
+D=D-M          // Subtract the value in R2 from D
 @CHANGE
-D;JLT
+D;JLT          // If D is negative, jump to CHANGE
 
 (LOOP)
 @R2
-MD=M-1
+MD=M-1         // Decrement the value in R2
 @CHECK_sgn
-D;JLT
+D;JLT          // If R2 is less than 0, jump to CHECK_sgn
 @R1
-D=M
+D=M            // Load the value in R1 into D
 @R0
-M=M+D
+M=M+D          // Add D to the value in R0
 @LOOP
-0;JMP
+0;JMP          // Repeat the LOOP
 
 (CHECK_sgn)
 @sgn
-D=M
+D=M            // Load the sgn flag into D
 @END
-D;JEQ
+D;JEQ          // If sgn is 0, jump to END
 @R0
-M=-M
+M=-M          // Negate the value in R0
 @END
-0;JMP
+0;JMP          // Jump to END
 
 (END)
 @END
-0;JMP
+0;JMP          // Infinite loop (program ends)
 
 (R2_A)
 @sgn
-M=!M
+M=!M           // Invert the sgn flag
 @R2
-M=-M
+M=-M           // Negate the value in R2
 @ENTRY
-0;JMP
+0; JMP          // Jump to ENTRY
 
 (R1_A)
 @sgn
-M=!M
+M=!M           // Invert the sgn flag
 @R1
-M=-M
+M=-M           // Negate the value in R1
 @CHECK_R2
-0;JMP
+0; JMP          // Jump to CHECK_R2
 
 (CHANGE)
 @R1
-D=M
+D=M            // Load the value in R1 into D
 @temp
-M=D
+M=D            // Store D in a temporary location
 @R2
-D=M
+D=M            // Load the value in R2 into D
 @R1
-M=D
+M=D            // Copy D into R1
 @temp
-D=M
+D=M            // Retrieve the value from the temporary location
 @R2
-M=D
+M=D            // Copy D into R2
 @LOOP
-0;JMP
+0; JMP          // Jump to LOOP
 
