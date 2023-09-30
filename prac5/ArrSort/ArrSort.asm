@@ -80,6 +80,13 @@ M=M+D
     A=M
     M=D
 
+// Continue the loop.
+(CONTINUE)
+    @R3
+    M=M+1
+    @LOOP2
+    0;JMP
+
 // End of the second loop (LOOP2).
 (LOOP2_END)
     @R1
@@ -94,12 +101,6 @@ M=M+D
     @END
     0;JMP
 
-// Continue the loop.
-(CONTINUE)
-    @R3
-    M=M+1
-    @LOOP2
-    0;JMP
 
 
 // Check for positive values.
