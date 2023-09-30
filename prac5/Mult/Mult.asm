@@ -6,6 +6,11 @@
 // Multiplies R1 and R2 and stores the result in R0.
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
+(R1_SGN)
+@R1
+D=M            // Load the value in R1 into D
+@R1_A
+D; JLT          // If it's negative (less than 0), jump to R2_SGN
 
 (R2_SGN)
 @R2
@@ -13,16 +18,9 @@ D=M            // Load the value in R2 into D
 @R2_A
 D; JLT          // If it's negative (less than 0), jump to BEGIN
 
-
-(R1_SGN)
-@R1
-D=M            // Load the value in R1 into D
-@R1_A
-D; JLT          // If it's negative (less than 0), jump to CHECK_R2
-
-
 @sgn
 M=0            // Initialize sgn (sign) flag to 0
+
 
 (BEGIN)
 @R1
@@ -44,6 +42,10 @@ M=M+D          // Add D to the value in R0
 @LOOP
 0;JMP          // Repeat the LOOP
 
+(END)
+@END
+0;JMP          // Infinite loop (program ends)
+
 (CHECK_sgn)
 @sgn
 D=M            // Load the sgn flag into D
@@ -53,10 +55,6 @@ D;JEQ          // If sgn is 0, jump to END
 M=-M          // Negate the value in R0
 @END
 0;JMP          // Jump to END
-
-(END)
-@END
-0;JMP          // Infinite loop (program ends)
 
 
 (CHANGE)
@@ -75,6 +73,14 @@ M=D            // Copy D into R2
 @LOOP
 0; JMP          // Jump to LOOP
 
+(R1_A)
+@sgn
+M=!M           // Invert the sgn flag
+@R1
+M=-M           // Negate the value in R1
+@R2_SGN
+0; JMP          // Jump to R2_SGN
+
 (R2_A)
 @sgn
 M=!M           // Invert the sgn flag
@@ -82,13 +88,4 @@ M=!M           // Invert the sgn flag
 M=-M           // Negate the value in R2
 @BEGIN
 0; JMP          // Jump to BEGIN
-
-(R1_A)
-@sgn
-M=!M           // Invert the sgn flag
-@R1
-M=-M           // Negate the value in R1
-@CHECK_R2
-0; JMP          // Jump to CHECK_R2
-
 
