@@ -6,6 +6,9 @@
 // Multiplies R1 and R2 and stores the result in R0.
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
+@sgn
+M=0            // Initialize sgn (sign) flag to 0
+
 (R1_SGN)
 @R1
 D=M            // Load the value in R1 into D
@@ -17,9 +20,6 @@ D; JLT          // If it's negative (less than 0), jump to R2_SGN
 D=M            // Load the value in R2 into D
 @R2_A
 D; JLT          // If it's negative (less than 0), jump to BEGIN
-
-@sgn
-M=0            // Initialize sgn (sign) flag to 0
 
 
 (BEGIN)
