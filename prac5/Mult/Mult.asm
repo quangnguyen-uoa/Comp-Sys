@@ -9,17 +9,19 @@
 @sgn
 M=0            // Initialize sgn (sign) flag to 0
 
-(R1_SGN)
-@R1
-D=M            // Load the value in R1 into D
-@R1_A
-D; JLT          // If it's negative (less than 0), jump to R2_SGN
 
 (R2_SGN)
 @R2
 D=M            // Load the value in R2 into D
 @R2_A
 D; JLT          // If it's negative (less than 0), jump to BEGIN
+
+(R1_SGN)
+@R1
+D=M            // Load the value in R1 into D
+@R1_A
+D; JLT          // If it's negative (less than 0), jump to R2_SGN
+
 
 
 (BEGIN)
@@ -73,14 +75,6 @@ M=D            // Copy D into R2
 @LOOP
 0; JMP          // Jump to LOOP
 
-(R2_A)
-@sgn
-M=!M           // Invert the sgn flag
-@R2
-M=-M           // Negate the value in R2
-@BEGIN
-0; JMP          // Jump to BEGIN
-
 (R1_A)
 @sgn
 M=!M           // Invert the sgn flag
@@ -88,3 +82,12 @@ M=!M           // Invert the sgn flag
 M=-M           // Negate the value in R1
 @R2_SGN
 0; JMP          // Jump to R2_SGN
+
+
+(R2_A)
+@sgn
+M=!M           // Invert the sgn flag
+@R2
+M=-M           // Negate the value in R2
+@BEGIN
+0; JMP          // Jump to BEGIN
