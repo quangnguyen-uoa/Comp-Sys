@@ -75,15 +75,6 @@ M=D            // Copy D into R2
 @LOOP
 0; JMP          // Jump to LOOP
 
-(R1_A)
-@sgn
-M=!M           // Invert the sgn flag
-@R1
-M=-M           // Negate the value in R1
-@R2_SGN
-0; JMP          // Jump to R2_SGN
-
-
 (R2_A)
 @sgn
 M=!M           // Invert the sgn flag
@@ -91,3 +82,11 @@ M=!M           // Invert the sgn flag
 M=-M           // Negate the value in R2
 @BEGIN
 0; JMP          // Jump to BEGIN
+
+(R1_A)
+@sgn
+M=!M           // Invert the sgn flag
+@R1
+M=-M           // Negate the value in R1
+@R2_SGN
+0; JMP          // Jump to R2_SGN
