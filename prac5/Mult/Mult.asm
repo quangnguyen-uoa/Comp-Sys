@@ -9,19 +9,17 @@
 @sgn
 M=0            // Initialize sgn (sign) flag to 0
 
-
-(R2_SGN)
-@R2
-D=M            // Load the value in R2 into D
-@R2_A
-D; JLT          // If it's negative (less than 0), jump to BEGIN
-
 (R1_SGN)
 @R1
 D=M            // Load the value in R1 into D
 @R1_A
 D; JLT          // If it's negative (less than 0), jump to R2_SGN
 
+(R2_SGN)
+@R2
+D=M            // Load the value in R2 into D
+@R2_A
+D; JLT          // If it's negative (less than 0), jump to BEGIN
 
 
 (BEGIN)
