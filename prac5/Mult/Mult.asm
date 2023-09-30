@@ -6,8 +6,18 @@
 // Multiplies R1 and R2 and stores the result in R0.
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
-@sgn
-M=0            // Initialize sgn (sign) flag to 0
+@R0
+M=0
+@R1 
+D=M
+
+
+(R2_SGN)
+@R2
+D=M            // Load the value in R2 into D
+@R2_A
+D; JLT          // If it's negative (less than 0), jump to BEGIN
+
 
 (R1_SGN)
 @R1
@@ -15,13 +25,11 @@ D=M            // Load the value in R1 into D
 @R1_A
 D; JLT          // If it's negative (less than 0), jump to CHECK_R2
 
-(CHECK_R2)
-@R2
-D=M            // Load the value in R2 into D
-@R2_A
-D; JLT          // If it's negative (less than 0), jump to ENTRY
 
-(ENTRY)
+@sgn
+M=0            // Initialize sgn (sign) flag to 0
+
+(BEGIN)
 @R1
 D=M            // Load the value in R1 into D
 @R2
@@ -55,21 +63,6 @@ M=-M          // Negate the value in R0
 @END
 0;JMP          // Infinite loop (program ends)
 
-(R2_A)
-@sgn
-M=!M           // Invert the sgn flag
-@R2
-M=-M           // Negate the value in R2
-@ENTRY
-0; JMP          // Jump to ENTRY
-
-(R1_A)
-@sgn
-M=!M           // Invert the sgn flag
-@R1
-M=-M           // Negate the value in R1
-@CHECK_R2
-0; JMP          // Jump to CHECK_R2
 
 (CHANGE)
 @R1
@@ -86,4 +79,21 @@ D=M            // Retrieve the value from the temporary location
 M=D            // Copy D into R2
 @LOOP
 0; JMP          // Jump to LOOP
+
+(R2_A)
+@sgn
+M=!M           // Invert the sgn flag
+@R2
+M=-M           // Negate the value in R2
+@BEGIN
+0; JMP          // Jump to BEGIN
+
+(R1_A)
+@sgn
+M=!M           // Invert the sgn flag
+@R1
+M=-M           // Negate the value in R1
+@CHECK_R2
+0; JMP          // Jump to CHECK_R2
+
 
