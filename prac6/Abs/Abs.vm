@@ -3,7 +3,16 @@
 
 // Put your code here.
 
+push static 0
+push constant 0
+lt 
 
+if-goto CASE1
 
+label CASE1
+    push static 0
+    neg
+    pop static 1
+    
 label END
 goto END
