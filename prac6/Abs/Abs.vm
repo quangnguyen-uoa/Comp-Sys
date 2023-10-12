@@ -6,12 +6,16 @@
 push static 0
 push constant 0
 lt 
-
 if-goto CASE1
+goto CASE2
 
 label CASE1
     push static 0
     neg
+    pop static 1
+
+label CASE2
+    push static 0
     pop static 1
     
 label END
