@@ -35,6 +35,7 @@ label WHILE_EXP0
     if-goto WHILE_EXP0
     push that 0
     pop local 2
+    goto WHILE_EXP0
 
 
 label END_LOOP
