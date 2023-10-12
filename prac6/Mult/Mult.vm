@@ -8,8 +8,60 @@
 push constant 0 
 pop local 0
 
+// init static 3 = x 
 push static 0 
 pop static 3
+
+// init sign for x and y
+push constant 0
+pop static 4
+push constant 0
+pop static 5
+
+// init counter 
+push static 0
+pop static 6 // counter
+push static 1
+pop static 7 // adder
+
+// check neg
+push static 0
+push constant 0
+lt
+if-goto NEG_X
+
+push static 1
+push constant 0
+lt 
+if-goto NEG_Y
+
+push static 0
+push static 1
+lt 
+if-goto LESS_Y
+goto iterate
+
+label NEG_X
+push static 0
+neg
+pop static 0
+push static 4
+push constant 1
+
+label NEG_Y
+push static 1
+neg
+pop static 1
+push static 5
+push constant 1
+
+label LESS_Y
+push static 1
+pop static 6
+push static 0
+pop static 7
+
+
 
 // loop
 label iterate
