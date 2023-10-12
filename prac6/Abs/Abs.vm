@@ -13,10 +13,11 @@ label CASE1
     push static 0
     neg
     pop static 1
+    goto END
 
 label CASE2
     push static 0
     pop static 1
-    
+
 label END
 goto END
