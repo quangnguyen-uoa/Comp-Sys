@@ -5,20 +5,20 @@ class VMTranslator:
         if(segment == "constant"):
             code = f"@{offset}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif(segment == "local"):
-            code = f"@{offset}\nD=A\n@LCL\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset}\nD=A\n@LCL\nA=D+M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "argument"):
-            code = f"@{offset}\nD=A\n@ARG\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset}\nD=A\n@ARG\nA=D+M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "this"):
-            code = f"@{offset}\nD=A\n@THIS\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset}\nD=A\n@THIS\nA=D+M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "that"):
-            code = f"@{offset}\nD=A\n@THAT\nA=M+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset}\nD=A\n@THAT\nA=D+M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "temp"):
-            code = f"@{offset}\nD=A\n@5\nA=A+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset}\nD=A\n@5\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "pointer"):
-            if offset == '0':
-                offset = 'THIS'
-            else:
-                offset = 'THAT'
+            # if offset == '0':
+            #     offset = 'THIS'
+            # else:
+            #     offset = 'THAT'
             code = f"@{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "static"):
             code = f"@{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
@@ -28,20 +28,20 @@ class VMTranslator:
     def vm_pop(segment, offset):
         '''Generate Hack Assembly code for a VM pop operation'''
         if (segment == "local"):
-            code = f"@{offset}\nD=A\n@LCL\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@LCL\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
         elif (segment == "argument"):
-            code = f"@{offset}\nD=A\n@ARG\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@ARG\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
         elif (segment == "this"):
-            code = f"@{offset}\nD=A\n@THIS\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@THIS\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
         elif (segment == "that"):
-            code = f"@{offset}\nD=A\n@THAT\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@THAT\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
         elif (segment == "temp"):
-            code = f"@{offset}\nD=A\n@5\nD=A+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@5\nD=A+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
         elif (segment == "pointer"):
-            if offset == '0':
-                offset = 'THIS'
-            else:
-                offset = 'THAT'   
+            # if offset == '0':
+            #     offset = 'THIS'
+            # else:
+            #     offset = 'THAT'   
             code = f"@SP\nAM=M-1\nD=M\n@{offset}\nM=D\n"
         elif (segment == "static"):
             code = f"@SP\nAM=M-1\nD=M\n@{offset}\nM=D\n"
@@ -98,6 +98,9 @@ class VMTranslator:
 
     def vm_function(function_name, n_vars):
         '''Generate Hack Assembly code for a VM function operation'''
+        code = f"({function_name})\n"
+        for i in range(n_vars):
+            code += "@0\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1"
         return ""
 
     def vm_call(function_name, n_args):
@@ -106,6 +109,7 @@ class VMTranslator:
 
     def vm_return():
         '''Generate Hack Assembly code for a VM return operation'''
+        
         return ""
 
 # A quick-and-dirty parser when run as a standalone script.
