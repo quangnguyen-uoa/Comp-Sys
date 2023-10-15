@@ -15,10 +15,10 @@ class VMTranslator:
         elif (segment == "temp"):
             code = f"@{offset}\nD=A\n@5\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "pointer"):
-            # if offset == '0':
-            #     offset = 'THIS'
-            # else:
-            #     offset = 'THAT'
+            if offset == '0':
+                offset = 'THIS'
+            else:
+                offset = 'THAT'
             code = f"@{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "static"):
             code = f"@{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
@@ -38,10 +38,10 @@ class VMTranslator:
         elif (segment == "temp"):
             code = f"@{offset}\nD=A\n@5\nD=A+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
         elif (segment == "pointer"):
-            # if offset == '0':
-            #     offset = 'THIS'
-            # else:
-            #     offset = 'THAT'   
+            if offset == '0':
+                offset = 'THIS'
+            else:
+                offset = 'THAT'   
             code = f"@SP\nAM=M-1\nD=M\n@{offset}\nM=D\n"
         elif (segment == "static"):
             code = f"@SP\nAM=M-1\nD=M\n@{offset}\nM=D\n"
@@ -90,11 +90,11 @@ class VMTranslator:
 
     def vm_goto(label):
         '''Generate Hack Assembly code for a VM goto operation'''
-        return f"@{label}\n0;JMP\n"
+        return f"@{label}\n" + "0;JMP\n"
 
     def vm_if(label):
         '''Generate Hack Assembly code for a VM if-goto operation'''
-        return f"@SP\nM=M-1\nA=M\nD=M\n@{label}\nD;JNE\n"
+        return "@SP\n" + "AM=M-1\n" + "D=M\n" + "f@{label}\n" + "D;JNE\n"
 
     def vm_function(function_name, n_vars):
         '''Generate Hack Assembly code for a VM function operation'''
@@ -105,12 +105,13 @@ class VMTranslator:
 
     def vm_call(function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
+        
         return ""
 
     def vm_return():
         '''Generate Hack Assembly code for a VM return operation'''
-        
-        return ""
+        code = f"@LCL\nD=M\n@frame\nM=D\n@5\nD=D-A\nA=D\nD=M\n@return\nM=D\n@SP\nM=M-1\nA=M\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@frame\nD=M\n@1\nD=D-A\nA=D\nD=M\n@THAT\nM=D\n@frame\nD=M\n@2\nD=D-A\nA=D\nD=M"
+        return code
 
 # A quick-and-dirty parser when run as a standalone script.
 if __name__ == "__main__":
