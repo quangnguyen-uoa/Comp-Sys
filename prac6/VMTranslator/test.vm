@@ -3,42 +3,28 @@
 // x & y are static variables
 
 // Put your code here.
-
-// init a = 0
-push constant 0 
-pop local 0
-
-// init static 3 = x 
-push static 0 
-pop static 3
-
-// init sign for x and y
-push constant 0
-pop static 4
-push constant 0
-pop static 5
-
-// init counter 
 push static 0
-pop static 6 // counter
+pop temp 0
 push static 1
-pop static 7 // adder
+pop temp 1
 
+push constant 0
+pop local 0
 
 push static 0    
 push constant 0
 eq
-if-goto END_INF
+if-goto END
 
 push static 1
 push constant 0
 eq
-if-goto END_INF
+if-goto END
 
-push static 1
+push static 0
 push constant 0
 gt 
-if-goto POS
+if-goto IF_X_POSITIVE
 push static 0
 neg
 pop static 0
@@ -46,8 +32,8 @@ push static 1
 neg
 pop static 1
 
-label POS
-label ITERATE
+label IF_X_POSITIVE
+label LOOP
 push local 0
 push static 1
 add
@@ -59,12 +45,12 @@ pop static 0
 push static 0
 push constant 0
 gt
-if-goto ITERATE
+if-goto LOOP
 
-push static 6
+push temp 0
 pop static 0
-push static 7
+push temp 1
 pop static 1
 
-label END_INF
-goto END_INF
+label END
+goto END
