@@ -9,6 +9,7 @@ function ArrMax.arrMax 2
     push argument 1
     pop local 0
     push that 0 
+    //push constant 10000
     pop local 1
 
 label WHILE_EXP0
@@ -26,7 +27,6 @@ label WHILE_EXP0
     push constant 1
     sub
     pop local 0
-    // goto WHILE_EXP0
     push that 0
     push local 1
     lt

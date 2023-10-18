@@ -13,38 +13,30 @@ class VMTranslator:
         elif (segment == "that"):
             code = f"@{offset}\nD=A\n@THAT\nA=D+M\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "temp"):
-            code = f"@{offset}\nD=A\n@5\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset}\nD=A\n@R5\nA=D+A\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "pointer"):
-            if offset == '0':
-                offset = 'THIS'
-            else:
-                offset = 'THAT'
-            code = f"@{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset}\nD=A\n@R3\nA=A+D\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         elif (segment == "static"):
-            code = f"@{offset}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
+            code = f"@{offset+16}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n"
         
         return code
 
     def vm_pop(segment, offset):
         '''Generate Hack Assembly code for a VM pop operation'''
         if (segment == "local"):
-            code = f"@{offset}\nD=A\n@LCL\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@LCL\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
         elif (segment == "argument"):
-            code = f"@{offset}\nD=A\n@ARG\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@ARG\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
         elif (segment == "this"):
-            code = f"@{offset}\nD=A\n@THIS\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@THIS\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
         elif (segment == "that"):
-            code = f"@{offset}\nD=A\n@THAT\nD=M+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
+            code = f"@{offset}\nD=A\n@THAT\nD=M+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
         elif (segment == "temp"):
-            code = f"@{offset}\nD=A\n@5\nD=A+D\n@frame\nM=D\n@SP\nAM=M-1\nD=M\n@frame\nA=M\nM=D\n"
-        elif (segment == "pointer"):
-            if offset == '0':
-                offset = 'THIS'
-            else:
-                offset = 'THAT'   
-            code = f"@SP\nAM=M-1\nD=M\n@{offset}\nM=D\n"
+            code = f"@{offset}\nD=A\n@R5\nD=A+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
+        elif (segment == "pointer"):   
+            code = f"@{offset}\nD=A\n@R3\nD=A+D\n@R13\nM=D\n@SP\nAM=M-1\nD=M\n@R13\nA=M\nM=D\n"
         elif (segment == "static"):
-            code = f"@SP\nAM=M-1\nD=M\n@{offset}\nM=D\n"
+            code = f"@SP\nAM=M-1\nD=M\n@{offset+16}\nM=D\n"
             
         return code
 
@@ -86,15 +78,18 @@ class VMTranslator:
 
     def vm_label(label):
         '''Generate Hack Assembly code for a VM label operation'''
-        return f"({label})\n"
+        code = f"({label})\n"
+        return code
 
     def vm_goto(label):
         '''Generate Hack Assembly code for a VM goto operation'''
-        return f"@{label}\n" + "0;JMP\n"
+        code = f"@{label}\n" + "0;JMP\n"
+        return code
 
     def vm_if(label):
         '''Generate Hack Assembly code for a VM if-goto operation'''
-        return "@SP\n" + "AM=M-1\n" + "D=M\n" + "f@{label}\n" + "D;JNE\n"
+        code = "@SP\n" + "AM=M-1\n" + "D=M\n" + f"@{label}\n" + "D;JNE\n"
+        return code
 
     def vm_function(function_name, n_vars):
         '''Generate Hack Assembly code for a VM function operation'''
@@ -110,7 +105,7 @@ class VMTranslator:
 
     def vm_return():
         '''Generate Hack Assembly code for a VM return operation'''
-        code = f"@LCL\nD=M\n@frame\nM=D\n@5\nD=D-A\nA=D\nD=M\n@return\nM=D\n@SP\nM=M-1\nA=M\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@frame\nD=M\n@1\nD=D-A\nA=D\nD=M\n@THAT\nM=D\n@frame\nD=M\n@2\nD=D-A\nA=D\nD=M"
+        code = f"@LCL\nD=M\n@R13\nM=D\n@5\nD=D-A\nA=D\nD=M\n@return\nM=D\n@SP\nM=M-1\nA=M\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@R13\nD=M\n@1\nD=D-A\nA=D\nD=M\n@THAT\nM=D\n@R13\nD=M\n@2\nD=D-A\nA=D\nD=M"
         return code
 
 # A quick-and-dirty parser when run as a standalone script.
