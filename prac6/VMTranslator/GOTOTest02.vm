@@ -1,0 +1,12 @@
+// Multiple jumps to labels
+push static 1
+goto THAT
+push static 2
+goto END_WHERE
+label THAT
+push local 1
+goto END_WHERE
+
+push static 0
+label END_WHERE
+pop static 0

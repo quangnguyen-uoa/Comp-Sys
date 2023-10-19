@@ -1,0 +1,10 @@
+push constant 3
+push constant 4
+lt
+if-goto LESS
+push constant 2
+goto END
+label LESS
+push constant 3
+label END
+pop static 2

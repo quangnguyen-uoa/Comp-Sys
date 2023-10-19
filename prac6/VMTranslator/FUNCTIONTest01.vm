@@ -1,0 +1,8 @@
+function Do 0
+push constant 7
+push constant 8
+sub
+pop static 1
+return
+
+call Do 0

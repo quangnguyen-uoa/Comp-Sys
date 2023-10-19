@@ -1,0 +1,9 @@
+function Add 0
+push constant 2
+neg
+push constant 3
+add
+pop static 1
+return
+
+call Add 0

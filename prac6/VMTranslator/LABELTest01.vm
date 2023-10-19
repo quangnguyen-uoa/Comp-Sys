@@ -1,0 +1,5 @@
+// Multiple jumps to labels
+label WHERE
+push constant 4
+label END
+pop static 0
