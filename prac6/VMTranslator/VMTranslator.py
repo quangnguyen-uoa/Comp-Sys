@@ -103,7 +103,8 @@ class VMTranslator:
 
     def vm_call(self, function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
-        code = f"""
+        code = f"@{function_name}${self.counter}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@ARG\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@THIS\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@THAT\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@SP\nD=M\n@5\nD=D-A\n@{n_args}\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@{function_name}\n0;JMP\n({function_name}${self.counter})\n"
+        code1 = f"""
         @{function_name}${self.counter}
         D=A
         @SP
@@ -114,35 +115,31 @@ class VMTranslator:
         @LCL
         D=M
         @SP
-        A=M
+        AM=M+1
+        A=A-1
         M=D
-        @SP
-        M=M+1
         @ARG
         D=M
         @SP
-        A=M
+        AM=M+1
+        A=A-1
         M=D
-        @SP
-        M=M+1
         @THIS
         D=M
         @SP
-        A=M
+        AM=M+1
+        A=A-1
         M=D
-        @SP
-        M=M+1
         @THAT
         D=M
         @SP
-        A=M
+        AM=M+1
+        A=A-1
         M=D
         @SP
-        M=M+1
+        D=M
         @5
-        D=A
-        @SP
-        D=M-D
+        D=D-A
         @{n_args}
         D=D-A
         @ARG
@@ -153,7 +150,7 @@ class VMTranslator:
         M=D
         @{function_name}
         0;JMP
-        @{function_name}${self.counter}
+        ({function_name}${self.counter})
         """
         
         self.counter += 1
@@ -161,68 +158,7 @@ class VMTranslator:
 
     def vm_return():
         '''Generate Hack Assembly code for a VM return operation'''
-        # code = "@LCL\nD=M\n@13\nM=D\n@5\nD=D-A\nA=D\nD=M\n@R14\nM=D\n@SP\nD=M-1\nA=D\nD=M\n@SP\nM=M-1\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@13\nD=M\nD=D-1\nA=D\nD=M\n@THAT\nM=D\n@13\nD=M\n@2\nD=D-A\nA=D\nD=M\n@THIS\nM=D\n@13\nD=M\n@3\nD=D-A\nA=D\nD=M\n@ARG\nM=D\n@13\nD=M\n@4\nD=D-A\nA=D\nD=M\n@LCL\nM=D\n@14\nA=M\n0;JMP\n"
-        code = """
-        @LCL
-        D=M
-        @EF
-        M=D
-        @5
-        D=D-A
-        A=D
-        D=M
-        @RA
-        M=D
-        @SP
-        D=M-1
-        A=D
-        D=M
-        @ARG
-        A=M
-        M=D
-        @SP
-        M=M-1
-        @ARG
-        D=M
-        @SP
-        M=D+1
-        @1
-        D=A
-        @EF
-        D=M-D
-        A=D
-        D=M
-        @THAT
-        M=D
-        @2
-        D=A
-        @EF
-        D=M-D
-        A=D
-        D=M
-        @THIS
-        M=D
-        @3
-        D=A
-        A=M
-        @EF
-        D=M-D
-        A=D
-        D=M
-        @ARG
-        M=D
-        @4
-        D=A
-        @EF
-        D=M-D
-        A=D
-        D=M
-        @LCL
-        M=D
-        @RA
-        A=M
-        0;JMP
-        """
+        code = "@LCL\nD=M\n@R13\nM=D\n@5\nA=D-A\nD=M\n@R14\nM=D\n@SP\nAM=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@R13\nAM=M-1\nD=M\n@THAT\nM=D\n@R13\nAM=M-1\nD=M\n@THIS\nM=D\n@R13\nAM=M-1\nD=M\n@ARG\nM=D\n@R13\nAM=M-1\nD=M\n@LCL\nM=D\n@R14\nA=M\n0;JMP\n"
         return code
 
 # A quick-and-dirty parser when run as a standalone script.
