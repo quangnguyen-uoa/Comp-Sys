@@ -98,11 +98,8 @@ class VMTranslator:
         '''Generate Hack Assembly code for a VM function operation'''
         code = f"({function_name})\n"
         for _ in range(n_vars):
-            code += "@SP\nAM=M+1\nA=A-1\n@SP\nM=0\n"
+            code += "@SP\nA=M\nM=0\n@SP\nM=M+1\n"
         return code
-
-
-
 
     def vm_call(self, function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
