@@ -15,7 +15,9 @@ class CompilerParser :
         Generates a parse tree for a single program
         @return a ParseTree that represents the program
         """
-        return None 
+        tree = ParseTree("program","")
+        tree.addChild(self.compileClass())
+        return tree
     
     
     def compileClass(self):
