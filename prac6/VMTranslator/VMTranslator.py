@@ -1,8 +1,5 @@
 class VMTranslator:
 
-    def __init__(self):
-        self.counter = 0
-
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
         if(segment == "constant"):
@@ -94,6 +91,7 @@ class VMTranslator:
         code = "@SP\n" + "AM=M-1\n" + "D=M\n" + f"@{label}\n" + "D;JNE\n"
         return code
 
+
     def vm_function(function_name, n_vars):
         '''Generate Hack Assembly code for a VM function operation'''
         code = f"({function_name})\n"
@@ -101,9 +99,9 @@ class VMTranslator:
             code += "@SP\nA=M\nM=0\n@SP\nM=M+1\n"
         return code
 
-    def vm_call(self, function_name, n_args):
+    def vm_call(function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
-        code = f"@RETURN{n_args}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@SP\nD=M\n@5\nD=D-A\n@{n_args}\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@{function_name}\n0;JMP\n(RETURN{n_args})\n"
+        code = f"@RET_ADD{n_args}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@SP\nD=M\n@5\nD=D-A\n@{n_args}\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@{function_name}\n0;JMP\n(RET_ADD{n_args})\n"
         n_args += 1
         return code
 
