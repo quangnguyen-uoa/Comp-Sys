@@ -1,5 +1,8 @@
 class VMTranslator:
 
+    def __init__(self):
+        self.counter = 0
+
     def vm_push(segment, offset):
         '''Generate Hack Assembly code for a VM push operation'''
         if(segment == "constant"):
@@ -98,14 +101,30 @@ class VMTranslator:
             code += "@SP\nA=M\nM=0\n@SP\nM=M+1\n"
         return code
 
-    def vm_call(function_name, n_args):
+    def vm_call(self, function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
-        code = f"@return_{function_name}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n@SP\nD=M\n@5\nD=D-A\n@{n_args}\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@{function_name}\n0;JMP\n(return_{function_name})\n"
+        code = f'''@Return{function_name}{self.counter}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n
+                @LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n
+                @ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n
+                @THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n
+                @THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n
+                @SP\nD=M\n@5\nD=D-A\n@{n_args}\nD=D-A\n
+                @ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n
+                @{function_name}\n0;JMP\n(Return{function_name}{self.counter})\n'''
+        self.counter += 1
         return code
 
     def vm_return():
         '''Generate Hack Assembly code for a VM return operation'''
-        code = f"@LCL\nD=M\n@R13\nM=D\n@5\nD=D-A\nA=D\nD=M\n@return\nM=D\n@SP\nM=M-1\nA=M\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@R13\nD=M\n@1\nD=D-A\nA=D\nD=M\n@THAT\nM=D\n@R13\nD=M\n@2\nD=D-A\nA=D\nD=M"
+        code = "@LCL\nD=M\n@13\nM=D\n"
+        "@5\nD=D-A\nA=D\nD=M\n@R14\nM=D\n"
+        "@SP\nAM=M-1\nD=M\n@ARG\nA=M\nM=D\n"
+        "@ARG\nD=M+1\n@SP\nM=D\n"
+        "@13\nD=M\nD=D-1\nA=D\nD=M\n@THAT\nM=D\n"
+        "@13\nD=M\n@2\nD=D-A\nA=D\nD=M\n@THIS\nM=D\n"
+        "@13\nD=M\n@3\nD=D-A\nA=D\nD=M\n@ARG\nM=D\n"
+        "@13\nD=M\n@4\nD=D-A\nA=D\nD=M\n@LCL\nM=D\n"
+        "@14\nA=M\n0;JMP\n"
         return code
 
 # A quick-and-dirty parser when run as a standalone script.
