@@ -103,57 +103,8 @@ class VMTranslator:
 
     def vm_call(self, function_name, n_args):
         '''Generate Hack Assembly code for a VM call operation'''
-        code = f"@RE  + {function_name} + {n_args}\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n@LCL\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@ARG\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@THIS\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@THAT\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@SP\nD=M\n@5\nD=D-A\n@{n_args}\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@{function_name}\n0;JMP\n(RE)\n"
-        code1 = f"""
-        @{function_name}${self.counter}
-        D=A
-        @SP
-        A=M
-        M=D
-        @SP
-        M=M+1
-        @LCL
-        D=M
-        @SP
-        AM=M+1
-        A=A-1
-        M=D
-        @ARG
-        D=M
-        @SP
-        AM=M+1
-        A=A-1
-        M=D
-        @THIS
-        D=M
-        @SP
-        AM=M+1
-        A=A-1
-        M=D
-        @THAT
-        D=M
-        @SP
-        AM=M+1
-        A=A-1
-        M=D
-        @SP
-        D=M
-        @5
-        D=D-A
-        @{n_args}
-        D=D-A
-        @ARG
-        M=D
-        @SP
-        D=M
-        @LCL
-        M=D
-        @{function_name}
-        0;JMP
-        ({function_name}${self.counter})
-        """
+        code = f"@RE_{function_name}_{self.counter}\nD=A\n@SP\nAM=M+1\nA=A-1\nM=D\n@LCL\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@ARG\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@THIS\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@THAT\nD=M\n@SP\nAM=M+1\nA=A-1\nM=D\n@SP\nD=M\n@5\nD=D-A\n@{n_args}\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@{function_name}\n0;JMP\n(@RE_{function_name}_{self.counter})\n"
         self.counter += 1
-        
         return code
 
     def vm_return():
