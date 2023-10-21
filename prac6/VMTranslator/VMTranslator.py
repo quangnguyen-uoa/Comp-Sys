@@ -107,7 +107,7 @@ class VMTranslator:
 
     def vm_return():
         '''Generate Hack Assembly code for a VM return operation'''
-        code = "@LCL\nD=M\n@R13\nM=D\n@R13\nD=M\n@5\nA=D-A\nD=M\n@R14\nM=D\n@SP\nAM=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@R13\nAM=M-1\nD=M\n@THAT\nM=D\n@R13\nAM=M-1\nD=M\n@THIS\nM=D\n@R13\nAM=M-1\nD=M\n@ARG\nM=D\n@R13\nAM=M-1\nD=M\n@LCL\nM=D\n@R14\nA=M\n0;JMP\n"
+        code = "@LCL\nD=M\n@13\nM=D\n@13\nD=M\n@5\nA=D-A\nD=M\n@14\nM=D\n@SP\nAM=M-1\nD=M\n@ARG\nA=M\nM=D\n@ARG\nD=M+1\n@SP\nM=D\n@13\nAM=M-1\nD=M\n@THAT\nM=D\n@13\nAM=M-1\nD=M\n@THIS\nM=D\n@13\nAM=M-1\nD=M\n@ARG\nM=D\n@13\nAM=M-1\nD=M\n@LCL\nM=D\n@14\nA=M\n0;JMP\n"
         return code
 
 # A quick-and-dirty parser when run as a standalone script.
