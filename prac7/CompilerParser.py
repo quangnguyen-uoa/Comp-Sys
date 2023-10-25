@@ -26,7 +26,16 @@ class CompilerParser :
         Generates a parse tree for a single class
         @return a ParseTree that represents a class
         """
-        return None 
+        tree = ParseTree("class","")
+        tree.addChild(self.mustBe("keyword","class"))
+        tree.addChild(self.mustBe("identifier",""))
+        tree.addChild(self.mustBe("symbol","{"))
+        while self.have("keyword",["static","field"]):
+            tree.addChild(self.compileClassVarDec())
+        while self.have("keyword",["constructor","function","method"]):
+            tree.addChild(self.compileSubroutine())
+        tree.addChild(self.mustBe("symbol","}"))
+        return tree
     
 
     def compileClassVarDec(self):
