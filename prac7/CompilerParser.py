@@ -7,7 +7,7 @@ class CompilerParser :
         Constructor for the CompilerParser
         @param tokens A list of tokens to be parsed
         """
-        pass
+        self.tokens = tokens
     
 
     def compileProgram(self):
@@ -16,7 +16,8 @@ class CompilerParser :
         @return a ParseTree that represents the program
         """
         tree = ParseTree("program","")
-        tree.addChild(self.compileClass())
+        while self.tokens != []:
+            tree.addChild(self.compileClass())
         return tree
     
     
