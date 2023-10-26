@@ -251,7 +251,7 @@ if __name__ == "__main__":
 
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileClass()
+        result = parser.compileClassVarDec()
         print(result)
     except ParseException:
         print("Error Parsing!")
