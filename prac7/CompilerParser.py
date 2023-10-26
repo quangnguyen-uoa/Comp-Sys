@@ -291,7 +291,19 @@ class CompilerParser :
         Generates a parse tree for a while statement
         @return a ParseTree that represents the statement
         """
-        return None 
+        tree = ParseTree("whileStatement","")
+        while self.tokens != []:
+            if len(self.tokens) == 0:
+                break
+            if self.current().value == "skip":
+                tree.addChild(self.compileExpression())
+            else:
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                prev_node = node
+                self.next()
+        return tree
 
 
     def compileDo(self):
