@@ -42,6 +42,7 @@ class CompilerParser :
         """
         if self.current().value == "class":
             tree = ParseTree("class","")
+            self.next()
             while self.tokens != []:
                 if len(self.tokens) == 0:
                     break
@@ -53,20 +54,9 @@ class CompilerParser :
                     child = self.compileSubroutine()
                     tree.addChild(child)
                 else:
-                    raise ParseException("Invalid class variable declaration or subroutine")
+                    child = ParseTree(node.node_type, node.value)
+                    tree.addChild(child)
                 self.next()
-                
-            # tree.addChild(self.mustBe("keyword","class"))
-            # tree.addChild(self.mustBe("identifier",""))
-            # tree.addChild(self.mustBe("symbol","{"))
-            # while self.have("keyword", ""):
-            #     if self.have("keyword", "static") or self.have("keyword", "field"):
-            #         tree.addChild(self.compileClassVarDec())
-            #     elif self.have("keyword", "constructor") or self.have("keyword", "function") or self.have("keyword", "method"):
-            #         tree.addChild(self.compileSubroutine())
-            #     else:
-            #         raise ParseException("Invalid class variable declaration or subroutine")
-            # tree.addChild(self.mustBe("symbol","}"))
             return tree
         raise ParseException("Invalid class")
     
@@ -76,9 +66,14 @@ class CompilerParser :
         Generates a parse tree for a static variable declaration or field declaration
         @return a ParseTree that represents a static variable declaration or field declaration
         """
-        # tree = ParseTree("classVarDec","")
-        # tree.addChild(self.mustBe("keyword","static") or self.mustBe("keyword","field"))
-        # tree
+        tree = ParseTree("classVarDec","")
+        while self.tokens != []:
+            if len(self.tokens) == 0:
+                break
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
         return None 
     
 
@@ -236,13 +231,18 @@ if __name__ == "__main__":
     """
     tokens = []
     tokens.append(Token("keyword","class"))
-    tokens.append(Token("identifier","MyClass"))
+    tokens.append(Token("identifier","Main"))
     tokens.append(Token("symbol","{"))
     tokens.append(Token("symbol","}"))
+    # tokens.append(Token("keyword","static"))
+    # tokens.append(Token("keyword","int"))
+    # tokens.append(Token("identifier","a"))
+    # tokens.append(Token("symbol",";"))
+    # tokens.append(Token("symbol","}"))
 
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileProgram()
+        result = parser.compileClass()
         print(result)
     except ParseException:
         print("Error Parsing!")
