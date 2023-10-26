@@ -155,6 +155,8 @@ class CompilerParser :
                     child = ParseTree(node.node_type, node.value)
                     tree.addChild(child)
                     break
+                elif self.current().value == "let":
+                    tree.addChild(self.compileLet())
                 else:
                     tree.addChild(self.compileVarDec())
             elif self.current().value == "}":
@@ -209,7 +211,22 @@ class CompilerParser :
         Generates a parse tree for a let statement
         @return a ParseTree that represents the statement
         """
-        return None 
+        tree = ParseTree("letStatement","")
+        while self.tokens != []:
+            if self.current().value == ";":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                break
+            if len(self.tokens) == 0:
+                break
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            prev_node = node
+            self.next()
+        return tree
 
 
     def compileIf(self):
