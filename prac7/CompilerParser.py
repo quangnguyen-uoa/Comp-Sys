@@ -90,6 +90,9 @@ class CompilerParser :
         tree = ParseTree("subroutine","")
         while self.tokens != []:
             if self.current().value == "}":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
                 break
             if len(self.tokens) == 0:
                 break
@@ -106,6 +109,19 @@ class CompilerParser :
         Generates a parse tree for a subroutine's parameters
         @return a ParseTree that represents a subroutine's parameters
         """
+        tree = ParseTree("parameterList","")
+        while self.tokens != []:
+            if self.current().value == ")":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                break
+            if len(self.tokens) == 0:
+                break
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
         return None 
     
     
