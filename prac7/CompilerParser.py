@@ -118,6 +118,7 @@ class CompilerParser :
         @return a ParseTree that represents a subroutine's parameters
         """
         tree = ParseTree("parameterList","")
+        prev_node = self.current()
         self.next()
         while self.tokens != []:
             if self.current().value == ")":
@@ -127,13 +128,13 @@ class CompilerParser :
                 break
             if len(self.tokens) == 0:
                 break
+            if self.current().value == "int" and prev_node.value == "int":
+                raise ParseException("Invalid")
             node = self.current()
             child = ParseTree(node.node_type, node.value)
             tree.addChild(child)
             prev_node = node
             self.next()
-            # if self.current().value == "int" and prev_node.value == "int":
-            #     raise ParseException("Invalid")
         return tree
     
     
@@ -297,16 +298,19 @@ if __name__ == "__main__":
     
     
 # function char test ( int test1 ) { }
-    tokens.append(Token("keyword","function"))
-    tokens.append(Token("keyword","char"))
-    tokens.append(Token("keyword","char"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
+    # tokens.append(Token("keyword","function"))
+    # tokens.append(Token("keyword","char"))
+    # tokens.append(Token("keyword","char"))
+    # tokens.append(Token("symbol","("))
+    # tokens.append(Token("symbol",")"))
+    # tokens.append(Token("symbol","{"))
+    # tokens.append(Token("symbol","}"))
+    tokens.append(Token("keyword","int"))
+    tokens.append(Token("keyword","int"))
+    tokens.append(Token("identifier","a"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileSubroutine()
+        result = parser.compileParameterList()
         print(result)
     except ParseException:
         print("Error Parsing!")
