@@ -93,11 +93,12 @@ class CompilerParser :
                 child = self.compileSubroutineBody()
                 tree.addChild(child)
                 break
-            # if self.current().value == "}":
-            #     node = self.current()
-            #     child = ParseTree(node.node_type, node.value)
-            #     tree.addChild(child)
-            #     break
+            if self.current().value == "(":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                child = self.compileParameterList()
+                tree.addChild(child)
             if len(self.tokens) == 0:
                 break
             node = self.current()
@@ -114,11 +115,12 @@ class CompilerParser :
         @return a ParseTree that represents a subroutine's parameters
         """
         tree = ParseTree("parameterList","")
+        self.next()
         while self.tokens != []:
             if self.current().value == ")":
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
+                # node = self.current()
+                # child = ParseTree(node.node_type, node.value)
+                # tree.addChild(child)
                 break
             if len(self.tokens) == 0:
                 break
@@ -126,7 +128,7 @@ class CompilerParser :
             child = ParseTree(node.node_type, node.value)
             tree.addChild(child)
             self.next()
-        return None 
+        return tree
     
     
     def compileSubroutineBody(self):
@@ -279,16 +281,25 @@ if __name__ == "__main__":
         }
     """
     tokens = []
-    tokens.append(Token("keyword","method"))
-    tokens.append(Token("keyword","boolean"))
+    # tokens.append(Token("keyword","method"))
+    # tokens.append(Token("keyword","boolean"))
+    # tokens.append(Token("identifier","test"))
+    # tokens.append(Token("symbol","("))
+    # tokens.append(Token("symbol",")"))
+    # tokens.append(Token("symbol","{"))
+    # tokens.append(Token("symbol","}"))
+    
+    
+# function char test ( int test1 ) { }
+    tokens.append(Token("keyword","function"))
+    tokens.append(Token("keyword","char"))
     tokens.append(Token("identifier","test"))
     tokens.append(Token("symbol","("))
+    tokens.append(Token("keyword","int"))
+    tokens.append(Token("identifier","test1"))
     tokens.append(Token("symbol",")"))
     tokens.append(Token("symbol","{"))
     tokens.append(Token("symbol","}"))
-    
-    
-
     parser = CompilerParser(tokens)
     try:
         result = parser.compileSubroutine()
