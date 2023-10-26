@@ -15,14 +15,18 @@ class CompilerParser :
         Generates a parse tree for a single program
         @return a ParseTree that represents the program
         """
-        tree = ParseTree("program","")
-        while self.tokens != []:
-            if len(self.tokens) == 0:
-                break
-            node = self.current()
-            child = ParseTree(node.type, node.value)
-            tree.addChild(child)
-            self.next()
+        tree = None
+        if self.mustBe("keyword","class"):
+            tree = self.compileClass()
+        else:
+            raise ParseException("Invalid")
+        # while self.tokens != []:
+        #     if len(self.tokens) == 0:
+        #         break
+        #     node = self.current()
+        #     child = ParseTree(node.type, node.value)
+        #     tree.addChild(child)
+        #     self.next()
         return tree
     
     
