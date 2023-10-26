@@ -145,16 +145,22 @@ class CompilerParser :
         """
         tree = ParseTree("subroutineBody","")
         while self.tokens != []:
-            if self.current().value == "}":
+            if self.current().value == "{":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                tree.addChild(self.compileVarDec())
+            elif self.current().value == "}":
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
                 tree.addChild(child)
                 break
-            if len(self.tokens) == 0:
+            elif len(self.tokens) == 0:
                 break
-            node = self.current()
-            child = ParseTree(node.node_type, node.value)
-            tree.addChild(child)
+            else:
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
             self.next()
         return tree
     
@@ -164,7 +170,19 @@ class CompilerParser :
         Generates a parse tree for a variable declaration
         @return a ParseTree that represents a var declaration
         """
-        return None 
+        tree = ParseTree("varDec","")
+        self.next()
+        while self.tokens != []:
+            if self.current().value == ";":
+                break
+            if len(self.tokens) == 0:
+                break
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            prev_node = node
+            self.next()
+        return tree
     
 
     def compileStatements(self):
@@ -305,12 +323,16 @@ if __name__ == "__main__":
     # tokens.append(Token("symbol",")"))
     # tokens.append(Token("symbol","{"))
     # tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","int"))
+    # { var int a ; }
+    tokens.append(Token("keyword","{")) 
+    tokens.append(Token("keyword","var"))
     tokens.append(Token("keyword","int"))
     tokens.append(Token("identifier","a"))
+    tokens.append(Token("symbol",";"))
+    tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileParameterList()
+        result = parser.compileSubroutineBody()
         print(result)
     except ParseException:
         print("Error Parsing!")
