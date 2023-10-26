@@ -225,7 +225,10 @@ class CompilerParser :
                 tree.addChild(self.compileWhile())
             elif self.current().value == "return":
                 tree.addChild(self.compileReturn())
+            elif self.current().value == "}":
+                break
             else:
+                print(self.current().value)
                 raise ParseException("Invalid")
         return tree
     
@@ -274,7 +277,6 @@ class CompilerParser :
         Generates a parse tree for a do statement
         @return a ParseTree that represents the statement
         """
-# let a = skip ; do skip ;  
         tree = ParseTree("doStatement","")
         while self.tokens != []:
             if self.current().value == ";":
@@ -382,17 +384,16 @@ if __name__ == "__main__":
     # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
 # let a = skip ; do skip ; 
+    tokens.append(Token("symbol","{"))
     tokens.append(Token("keyword","let"))
     tokens.append(Token("identifier","a"))
     tokens.append(Token("symbol","="))
     tokens.append(Token("keyword","skip"))
     tokens.append(Token("symbol",";"))
-    tokens.append(Token("keyword","do"))
-    tokens.append(Token("keyword","skip"))
-    tokens.append(Token("symbol",";"))
+    tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileStatements()
+        result = parser.compileSubroutineBody()
         print(result)
     except ParseException:
         print("Error Parsing!")
