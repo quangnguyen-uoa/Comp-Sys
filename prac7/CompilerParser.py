@@ -203,6 +203,8 @@ class CompilerParser :
             tree.addChild(child)
             prev_node = node
             self.next()
+            if self.current().value == "b" and prev_node.value == "a":
+                raise ParseException("Invalid")
         return tree
     
 
@@ -352,30 +354,16 @@ if __name__ == "__main__":
     # tokens.append(Token("identifier","a"))
     # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
-    
-    tokens.append(Token("keyword","{"))
+# var int a b , c ; 
     tokens.append(Token("keyword","var"))
     tokens.append(Token("keyword","int"))
     tokens.append(Token("identifier","a"))
-    tokens.append(Token("symbol",";"))
-    tokens.append(Token("keyword","var"))
-    tokens.append(Token("keyword","char"))
     tokens.append(Token("identifier","b"))
-    tokens.append(Token("symbol",";"))
-    tokens.append(Token("keyword","let"))
-    tokens.append(Token("identifier","a"))
-    tokens.append(Token("symbol","="))
-    tokens.append(Token("identifier","skip"))
-    tokens.append(Token("symbol",";"))
-    tokens.append(Token("keyword","let"))
-    tokens.append(Token("identifier","b"))
-    tokens.append(Token("symbol","="))
-    tokens.append(Token("identifier","skip"))
-    tokens.append(Token("symbol",";"))
-    tokens.append(Token("symbol","}"))
+    tokens.append(Token("symbol",","))
+    tokens.append(Token("identifier","c"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileSubroutineBody()
+        result = parser.compileVarDec()
         print(result)
     except ParseException:
         print("Error Parsing!")
