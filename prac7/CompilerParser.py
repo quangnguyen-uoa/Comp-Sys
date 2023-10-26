@@ -82,7 +82,8 @@ class CompilerParser :
         Generates a parse tree for a method, function, or constructor
         @return a ParseTree that represents the method, function, or constructor
         """
-        return None 
+        tree = ParseTree("subroutineDec","")
+        return tree
     
     
     def compileParameterList(self):
@@ -233,6 +234,9 @@ if __name__ == "__main__":
     tokens.append(Token("keyword","class"))
     tokens.append(Token("identifier","Main"))
     tokens.append(Token("symbol","{"))
+    tokens.append(Token("keyword","static"))
+    tokens.append(Token("keyword","int"))
+    tokens.append(Token("identifier","test"))
     tokens.append(Token("symbol","}"))
 # class Main { static int test ; }
     # tokens.append(Token("keyword","static"))
