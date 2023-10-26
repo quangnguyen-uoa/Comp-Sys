@@ -240,6 +240,8 @@ class CompilerParser :
         """
         tree = ParseTree("letStatement","")
         while self.tokens != []:
+            if len(self.tokens) == 0:
+                break
             if self.current().value == ";":
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
@@ -248,13 +250,12 @@ class CompilerParser :
                 break
             elif self.current().value == "skip":
                 tree.addChild(self.compileExpression())
-            if len(self.tokens) == 0:
-                break
-            node = self.current()
-            child = ParseTree(node.node_type, node.value)
-            tree.addChild(child)
-            prev_node = node
-            self.next()
+            else:
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                prev_node = node
+                self.next()
         return tree
 
 
@@ -287,6 +288,8 @@ class CompilerParser :
                 tree.addChild(child)
                 self.next()
                 break
+            elif self.current().value == "skip":
+                tree.addChild(self.compileExpression())
             if len(self.tokens) == 0:
                 break
             node = self.current()
@@ -391,17 +394,22 @@ if __name__ == "__main__":
     # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
 # let a [ skip ] = skip ;
+# let a = skip ; do skip ;
     tokens.append(Token("keyword","let"))
     tokens.append(Token("identifier","a"))
-    tokens.append(Token("symbol","["))
-    tokens.append(Token("keyword","skip"))
-    tokens.append(Token("symbol","]"))
+    # tokens.append(Token("symbol","["))
     tokens.append(Token("symbol","="))
     tokens.append(Token("keyword","skip"))
     tokens.append(Token("symbol",";"))
+    tokens.append(Token("keyword","do"))
+    tokens.append(Token("keyword","skip"))
+    tokens.append(Token("symbol",";"))
+    # tokens.append(Token("symbol","]"))
+    # tokens.append(Token("symbol","="))
+    # tokens.append(Token("keyword","skip"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileLet()
+        result = parser.compileStatements()
         print(result)
     except ParseException:
         print("Error Parsing!")
