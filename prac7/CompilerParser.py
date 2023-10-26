@@ -16,8 +16,6 @@ class CompilerParser :
         @return a ParseTree that represents the program
         """
         tree = ParseTree("program","")
-        if self.tokens == []:
-            raise ParseException("No tokens to parse!")
         while self.tokens != []:
             tree.addChild(self.compileClass())
         return tree
@@ -48,7 +46,9 @@ class CompilerParser :
         Generates a parse tree for a static variable declaration or field declaration
         @return a ParseTree that represents a static variable declaration or field declaration
         """
-        
+        # tree = ParseTree("classVarDec","")
+        # tree.addChild(self.mustBe("keyword","static") or self.mustBe("keyword","field"))
+        # tree
         return None 
     
 
