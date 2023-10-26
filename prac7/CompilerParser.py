@@ -68,6 +68,8 @@ class CompilerParser :
         """
         tree = ParseTree("classVarDec","")
         while self.tokens != []:
+            if self.current().value == ";":
+                break
             if len(self.tokens) == 0:
                 break
             node = self.current()
@@ -83,6 +85,16 @@ class CompilerParser :
         @return a ParseTree that represents the method, function, or constructor
         """
         tree = ParseTree("subroutineDec","")
+        while self.tokens != []:
+            if self.current().value == ")":
+                break
+            if len(self.tokens) == 0:
+                break
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+        
         return tree
     
     
