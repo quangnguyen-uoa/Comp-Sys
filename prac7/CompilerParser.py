@@ -89,7 +89,7 @@ class CompilerParser :
         """
         tree = ParseTree("subroutine","")
         while self.tokens != []:
-            if self.current().value == ")":
+            if self.current().value == "}":
                 break
             if len(self.tokens) == 0:
                 break
