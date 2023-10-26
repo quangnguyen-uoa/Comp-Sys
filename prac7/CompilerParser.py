@@ -149,7 +149,7 @@ class CompilerParser :
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
                 tree.addChild(child)
-                tree.addChild(self.compileVarDec())
+                # tree.addChild(self.compileVarDec())
             elif self.current().value == "}":
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
@@ -182,7 +182,7 @@ class CompilerParser :
             tree.addChild(child)
             prev_node = node
             self.next()
-        return tree
+        return None
     
 
     def compileStatements(self):
