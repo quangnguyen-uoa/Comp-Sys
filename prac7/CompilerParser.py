@@ -265,24 +265,24 @@ class CompilerParser :
         @return a ParseTree that represents the statement
         """
         tree = ParseTree("ifStatement","")
-        while self.tokens != []:
-            if len(self.tokens) == 0:
-                break
-            if self.current().value == "else":
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                self.next()
-                tree.addChild(self.compileStatements())
-                break
-            elif self.current().value == "skip":
-                tree.addChild(self.compileExpression())
-            else:
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                prev_node = node
-                self.next()
+        # while self.tokens != []:
+        #     if len(self.tokens) == 0:
+        #         break
+        #     if self.current().value == "else":
+        #         node = self.current()
+        #         child = ParseTree(node.node_type, node.value)
+        #         tree.addChild(child)
+        #         self.next()
+        #         tree.addChild(self.compileStatements())
+        #         break
+        #     elif self.current().value == "skip":
+        #         tree.addChild(self.compileExpression())
+        #     else:
+        #         node = self.current()
+        #         child = ParseTree(node.node_type, node.value)
+        #         tree.addChild(child)
+        #         prev_node = node
+        #         self.next()
         return tree
 
     
