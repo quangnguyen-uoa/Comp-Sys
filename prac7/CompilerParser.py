@@ -16,6 +16,8 @@ class CompilerParser :
         @return a ParseTree that represents the program
         """
         tree = ParseTree("program","")
+        if self.tokens == []:
+            raise ParseException("No tokens to parse!")
         while self.tokens != []:
             tree.addChild(self.compileClass())
         return tree
