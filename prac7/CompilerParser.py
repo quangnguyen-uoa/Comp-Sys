@@ -17,10 +17,6 @@ class CompilerParser :
         @return a ParseTree that represents the program
         """
         tree = ParseTree("class","")
-        # if self.mustBe("keyword","class"):
-        #     tree = self.compileClass()
-        # else:
-        #     raise ParseException("Invalid")
         if self.current().value != "class":
             raise ParseException("Invalid")
         
@@ -42,11 +38,14 @@ class CompilerParser :
         """
         if self.current().value == "class":
             tree = ParseTree("class","")
+            prev_node = self.current()
             self.next()
             while self.tokens != []:
                 if len(self.tokens) == 0:
                     break
                 node = self.current()
+                if node.node_type == "identifier" and prev_node.node_type == "identifier":
+                    raise ParseException("Invalid class")
                 if node.value == "static" or node.value == "field":
                     child = self.compileClassVarDec()
                     tree.addChild(child)
@@ -56,6 +55,7 @@ class CompilerParser :
                 else:
                     child = ParseTree(node.node_type, node.value)
                     tree.addChild(child)
+                prev_node = node
                 self.next()
             return tree
         raise ParseException("Invalid class")
@@ -245,11 +245,12 @@ if __name__ == "__main__":
     tokens = []
     tokens.append(Token("keyword","class"))
     tokens.append(Token("identifier","Main"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("keyword","static"))
-    tokens.append(Token("keyword","int"))
-    tokens.append(Token("identifier","test"))
+    tokens.append(Token("identifier","Main"))
     tokens.append(Token("symbol","}"))
+    tokens.append(Token("symbol","{"))
+    # tokens.append(Token("keyword","static"))
+    # tokens.append(Token("keyword","int"))
+    # tokens.append(Token("identifier","test"))
 # class Main { static int test ; }
     # tokens.append(Token("keyword","static"))
     # tokens.append(Token("keyword","int"))
