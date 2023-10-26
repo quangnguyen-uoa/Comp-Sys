@@ -17,7 +17,10 @@ class CompilerParser :
         """
         tree = ParseTree("program","")
         while self.tokens != []:
+            if len(self.tokens) == 0:
+                break
             tree.addChild(self.compileClass())
+            self.next()
         return tree
     
     
@@ -160,6 +163,8 @@ class CompilerParser :
         """
         Advance to the next token
         """
+        if len(self.tokens) != 0:
+            self.tokens.pop(0)
         return
 
 
