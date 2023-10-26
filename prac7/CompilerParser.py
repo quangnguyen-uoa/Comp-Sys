@@ -77,7 +77,7 @@ class CompilerParser :
             tree.addChild(child)
             prev_node = node
             self.next()
-            if self.current().node_type == "keyword" and prev_node.node_type == "keyword":
+            if self.current().value == "static" and prev_node.value == "boolean":
                 raise ParseException("Invalid classVarDec")
         return tree
     
