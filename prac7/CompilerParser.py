@@ -243,20 +243,11 @@ if __name__ == "__main__":
         }
     """
     tokens = []
-    tokens.append(Token("keyword","class"))
-    tokens.append(Token("identifier","Main"))
-    tokens.append(Token("identifier","Main"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("symbol","{"))
-    # tokens.append(Token("keyword","static"))
-    # tokens.append(Token("keyword","int"))
-    # tokens.append(Token("identifier","test"))
-# class Main { static int test ; }
-    # tokens.append(Token("keyword","static"))
-    # tokens.append(Token("keyword","int"))
-    # tokens.append(Token("identifier","a"))
-    # tokens.append(Token("symbol",";"))
-    # tokens.append(Token("symbol","}"))
+    tokens.append(Token("keyword","field"))
+    tokens.append(Token("keyword","boolean"))
+    tokens.append(Token("keyword","static"))
+    tokens.append(Token("identifier","test2"))
+    tokens.append(Token("symbol",";"))
 
     parser = CompilerParser(tokens)
     try:
