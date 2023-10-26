@@ -157,9 +157,12 @@ class CompilerParser :
                     break
                 elif self.current().value == "let":
                     tree.addChild(self.compileStatements())
-                    # tree.addChild(self.compileLet())
                 else:
                     tree.addChild(self.compileVarDec())
+            elif self.current().value == "var":
+                tree.addChild(self.compileVarDec())
+            elif self.current().value == "let":
+                tree.addChild(self.compileStatements())
             elif self.current().value == "}":
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
@@ -181,6 +184,10 @@ class CompilerParser :
         @return a ParseTree that represents a var declaration
         """
         tree = ParseTree("varDec","")
+        if self.current().value == "var":
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
         self.next()
         while self.tokens != []:
             if self.current().value == ";":
@@ -346,12 +353,24 @@ if __name__ == "__main__":
     # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
     
-# { let a = skip ; }
-    tokens.append(Token("symbol","{"))
+    tokens.append(Token("keyword","{"))
+    tokens.append(Token("keyword","var"))
+    tokens.append(Token("keyword","int"))
+    tokens.append(Token("identifier","a"))
+    tokens.append(Token("symbol",";"))
+    tokens.append(Token("keyword","var"))
+    tokens.append(Token("keyword","char"))
+    tokens.append(Token("identifier","b"))
+    tokens.append(Token("symbol",";"))
     tokens.append(Token("keyword","let"))
     tokens.append(Token("identifier","a"))
     tokens.append(Token("symbol","="))
-    tokens.append(Token("keyword","skip"))
+    tokens.append(Token("identifier","skip"))
+    tokens.append(Token("symbol",";"))
+    tokens.append(Token("keyword","let"))
+    tokens.append(Token("identifier","b"))
+    tokens.append(Token("symbol","="))
+    tokens.append(Token("identifier","skip"))
     tokens.append(Token("symbol",";"))
     tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
