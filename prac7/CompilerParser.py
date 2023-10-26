@@ -181,6 +181,10 @@ class CompilerParser :
         self.next()
         while self.tokens != []:
             if self.current().value == ";":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
                 break
             if len(self.tokens) == 0:
                 break
@@ -321,36 +325,17 @@ if __name__ == "__main__":
     # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
     
-# class Main { static int test ; static int test2 ; function void test3 ( ) { } function void test4 ( ) { } }  
-    tokens.append(Token("keyword","class"))
-    tokens.append(Token("identifier","Main"))
+# { let a = skip ; }
     tokens.append(Token("symbol","{"))
-    tokens.append(Token("keyword","static"))
-    tokens.append(Token("keyword","int"))
-    tokens.append(Token("identifier","test"))
+    tokens.append(Token("keyword","let"))
+    tokens.append(Token("identifier","a"))
+    tokens.append(Token("symbol","="))
+    tokens.append(Token("keyword","skip"))
     tokens.append(Token("symbol",";"))
-    tokens.append(Token("keyword","static"))
-    tokens.append(Token("keyword","int"))
-    tokens.append(Token("identifier","test2"))
-    tokens.append(Token("symbol",";"))
-    tokens.append(Token("keyword","function"))
-    tokens.append(Token("keyword","void"))
-    tokens.append(Token("identifier","test3"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","function"))
-    tokens.append(Token("keyword","void"))
-    tokens.append(Token("identifier","test4"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
     tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileClass()
+        result = parser.compileSubroutineBody()
         print(result)
     except ParseException:
         print("Error Parsing!")
