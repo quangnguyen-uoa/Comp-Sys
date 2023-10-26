@@ -104,7 +104,10 @@ class CompilerParser :
             node = self.current()
             child = ParseTree(node.node_type, node.value)
             tree.addChild(child)
+            prev_node = node
             self.next()
+            if self.current().value == "char" and prev_node.value == "char":
+                raise ParseException("Invalid")            
         
         return tree
     
@@ -293,10 +296,8 @@ if __name__ == "__main__":
 # function char test ( int test1 ) { }
     tokens.append(Token("keyword","function"))
     tokens.append(Token("keyword","char"))
-    tokens.append(Token("identifier","test"))
+    tokens.append(Token("keyword","char"))
     tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","int"))
-    tokens.append(Token("identifier","test1"))
     tokens.append(Token("symbol",")"))
     tokens.append(Token("symbol","{"))
     tokens.append(Token("symbol","}"))
