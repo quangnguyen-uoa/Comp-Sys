@@ -214,8 +214,19 @@ class CompilerParser :
         @return a ParseTree that represents the series of statements
         """
         tree = ParseTree("statements","")
-        if self.current().value == "let":
-            tree.addChild(self.compileLet())
+        while self.tokens != []:
+            if self.current().value == "let":
+                tree.addChild(self.compileLet())
+            elif self.current().value == "do":
+                tree.addChild(self.compileDo())
+            elif self.current().value == "if":
+                tree.addChild(self.compileIf())
+            elif self.current().value == "while":
+                tree.addChild(self.compileWhile())
+            elif self.current().value == "return":
+                tree.addChild(self.compileReturn())
+            else:
+                raise ParseException("Invalid")
         return tree
     
     
@@ -263,7 +274,23 @@ class CompilerParser :
         Generates a parse tree for a do statement
         @return a ParseTree that represents the statement
         """
-        return None 
+# let a = skip ; do skip ;  
+        tree = ParseTree("doStatement","")
+        while self.tokens != []:
+            if self.current().value == ";":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                break
+            if len(self.tokens) == 0:
+                break
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            prev_node = node
+            self.next()
+        return tree
 
 
     def compileReturn(self):
@@ -354,16 +381,18 @@ if __name__ == "__main__":
     # tokens.append(Token("identifier","a"))
     # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
-# var int a b , c ; 
-    tokens.append(Token("keyword","var"))
-    tokens.append(Token("keyword","int"))
+# let a = skip ; do skip ; 
+    tokens.append(Token("keyword","let"))
     tokens.append(Token("identifier","a"))
-    tokens.append(Token("identifier","b"))
-    tokens.append(Token("symbol",","))
-    tokens.append(Token("identifier","c"))
+    tokens.append(Token("symbol","="))
+    tokens.append(Token("keyword","skip"))
+    tokens.append(Token("symbol",";"))
+    tokens.append(Token("keyword","do"))
+    tokens.append(Token("keyword","skip"))
+    tokens.append(Token("symbol",";"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileVarDec()
+        result = parser.compileStatements()
         print(result)
     except ParseException:
         print("Error Parsing!")
