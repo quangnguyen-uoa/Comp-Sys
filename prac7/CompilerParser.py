@@ -149,7 +149,14 @@ class CompilerParser :
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
                 tree.addChild(child)
-                tree.addChild(self.compileVarDec())
+                self.next()
+                if self.current().value == "}":
+                    node = self.current()
+                    child = ParseTree(node.node_type, node.value)
+                    tree.addChild(child)
+                    break
+                else:
+                    tree.addChild(self.compileVarDec())
             elif self.current().value == "}":
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
@@ -161,7 +168,7 @@ class CompilerParser :
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
                 tree.addChild(child)
-            self.next()
+                self.next()
         return tree
     
     
@@ -306,33 +313,44 @@ if __name__ == "__main__":
         }
     """
     tokens = []
-    # tokens.append(Token("keyword","method"))
-    # tokens.append(Token("keyword","boolean"))
-    # tokens.append(Token("identifier","test"))
-    # tokens.append(Token("symbol","("))
-    # tokens.append(Token("symbol",")"))
-    # tokens.append(Token("symbol","{"))
+
+    # tokens.append(Token("keyword","{")) 
+    # tokens.append(Token("keyword","var"))
+    # tokens.append(Token("keyword","int"))
+    # tokens.append(Token("identifier","a"))
+    # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
     
-    
-# function char test ( int test1 ) { }
-    # tokens.append(Token("keyword","function"))
-    # tokens.append(Token("keyword","char"))
-    # tokens.append(Token("keyword","char"))
-    # tokens.append(Token("symbol","("))
-    # tokens.append(Token("symbol",")"))
-    # tokens.append(Token("symbol","{"))
-    # tokens.append(Token("symbol","}"))
-    # { var int a ; }
-    tokens.append(Token("keyword","{")) 
-    tokens.append(Token("keyword","var"))
+# class Main { static int test ; static int test2 ; function void test3 ( ) { } function void test4 ( ) { } }  
+    tokens.append(Token("keyword","class"))
+    tokens.append(Token("identifier","Main"))
+    tokens.append(Token("symbol","{"))
+    tokens.append(Token("keyword","static"))
     tokens.append(Token("keyword","int"))
-    tokens.append(Token("identifier","a"))
+    tokens.append(Token("identifier","test"))
     tokens.append(Token("symbol",";"))
+    tokens.append(Token("keyword","static"))
+    tokens.append(Token("keyword","int"))
+    tokens.append(Token("identifier","test2"))
+    tokens.append(Token("symbol",";"))
+    tokens.append(Token("keyword","function"))
+    tokens.append(Token("keyword","void"))
+    tokens.append(Token("identifier","test3"))
+    tokens.append(Token("symbol","("))
+    tokens.append(Token("symbol",")"))
+    tokens.append(Token("symbol","{"))
+    tokens.append(Token("symbol","}"))
+    tokens.append(Token("keyword","function"))
+    tokens.append(Token("keyword","void"))
+    tokens.append(Token("identifier","test4"))
+    tokens.append(Token("symbol","("))
+    tokens.append(Token("symbol",")"))
+    tokens.append(Token("symbol","{"))
+    tokens.append(Token("symbol","}"))
     tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileSubroutineBody()
+        result = parser.compileClass()
         print(result)
     except ParseException:
         print("Error Parsing!")
