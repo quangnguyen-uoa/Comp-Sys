@@ -132,8 +132,8 @@ class CompilerParser :
             tree.addChild(child)
             prev_node = node
             self.next()
-            if self.current().value == "int" and prev_node.value == "int":
-                raise ParseException("Invalid")
+            # if self.current().value == "int" and prev_node.value == "int":
+            #     raise ParseException("Invalid")
         return tree
     
     
