@@ -156,7 +156,8 @@ class CompilerParser :
                     tree.addChild(child)
                     break
                 elif self.current().value == "let":
-                    tree.addChild(self.compileLet())
+                    tree.addChild(self.compileStatements())
+                    # tree.addChild(self.compileLet())
                 else:
                     tree.addChild(self.compileVarDec())
             elif self.current().value == "}":
@@ -203,7 +204,10 @@ class CompilerParser :
         Generates a parse tree for a series of statements
         @return a ParseTree that represents the series of statements
         """
-        return None 
+        tree = ParseTree("statements","")
+        if self.current().value == "let":
+            tree.addChild(self.compileLet())
+        return tree
     
     
     def compileLet(self):
