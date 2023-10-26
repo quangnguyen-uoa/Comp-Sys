@@ -32,10 +32,13 @@ class CompilerParser :
         tree.addChild(self.mustBe("keyword","class"))
         tree.addChild(self.mustBe("identifier",""))
         tree.addChild(self.mustBe("symbol","{"))
-        while self.have("keyword",["static","field"]):
-            tree.addChild(self.compileClassVarDec())
-        while self.have("keyword",["constructor","function","method"]):
-            tree.addChild(self.compileSubroutine())
+        while self.have("keyword", ""):
+            if self.have("keyword", "static") or self.have("keyword", "field"):
+                tree.addChild(self.compileClassVarDec())
+            elif self.have("keyword", "constructor") or self.have("keyword", "function") or self.have("keyword", "method"):
+                tree.addChild(self.compileSubroutine())
+            else:
+                raise ParseException("Invalid class variable declaration or subroutine")
         tree.addChild(self.mustBe("symbol","}"))
         return tree
     
