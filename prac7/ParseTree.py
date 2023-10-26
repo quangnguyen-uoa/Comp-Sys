@@ -83,5 +83,6 @@ class Token(ParseTree):
     """
     Token for parsing. Can be used as a terminal node in a ParseTree
     """
-    pass
+    def __init__(self, node_type, value):
+        super().__init__(node_type, value)
     
