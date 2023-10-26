@@ -19,7 +19,9 @@ class CompilerParser :
         while self.tokens != []:
             if len(self.tokens) == 0:
                 break
-            tree.addChild(self.compileClass())
+            node = self.current()
+            child = ParseTree(node.type, node.value)
+            tree.addChild(child)
             self.next()
         return tree
     
