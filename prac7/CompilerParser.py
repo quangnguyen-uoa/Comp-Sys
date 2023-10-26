@@ -246,6 +246,8 @@ class CompilerParser :
                 tree.addChild(child)
                 self.next()
                 break
+            elif self.current().value == "skip":
+                tree.addChild(self.compileExpression())
             if len(self.tokens) == 0:
                 break
             node = self.current()
@@ -308,7 +310,12 @@ class CompilerParser :
         Generates a parse tree for an expression
         @return a ParseTree that represents the expression
         """
-        return None 
+        tree = ParseTree("expression","")
+        node = self.current()
+        child = ParseTree(node.node_type, node.value)
+        tree.addChild(child)
+        self.next()
+        return tree
 
 
     def compileTerm(self):
@@ -383,17 +390,18 @@ if __name__ == "__main__":
     # tokens.append(Token("identifier","a"))
     # tokens.append(Token("symbol",";"))
     # tokens.append(Token("symbol","}"))
-# let a = skip ; do skip ; 
-    tokens.append(Token("symbol","{"))
+# let a [ skip ] = skip ;
     tokens.append(Token("keyword","let"))
     tokens.append(Token("identifier","a"))
+    tokens.append(Token("symbol","["))
+    tokens.append(Token("keyword","skip"))
+    tokens.append(Token("symbol","]"))
     tokens.append(Token("symbol","="))
     tokens.append(Token("keyword","skip"))
     tokens.append(Token("symbol",";"))
-    tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileSubroutineBody()
+        result = parser.compileLet()
         print(result)
     except ParseException:
         print("Error Parsing!")
