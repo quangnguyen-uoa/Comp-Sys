@@ -74,7 +74,7 @@ class CompilerParser :
             child = ParseTree(node.node_type, node.value)
             tree.addChild(child)
             self.next()
-        return None 
+        return tree
     
 
     def compileSubroutine(self):
@@ -234,6 +234,7 @@ if __name__ == "__main__":
     tokens.append(Token("identifier","Main"))
     tokens.append(Token("symbol","{"))
     tokens.append(Token("symbol","}"))
+# class Main { static int test ; }
     # tokens.append(Token("keyword","static"))
     # tokens.append(Token("keyword","int"))
     # tokens.append(Token("identifier","a"))
