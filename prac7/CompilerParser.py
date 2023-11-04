@@ -464,38 +464,19 @@ if __name__ == "__main__":
     """
     tokens = []
 
-    # if ( skip ) { if ( skip ) { } else { } } else { if ( skip ) { } else { } }
-    tokens.append(Token("keyword","if"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","skip"))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("keyword","if"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","skip"))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","else"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","else"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("keyword","if"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","skip"))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","else"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("symbol","}"))
+    # let x[ix] = y;
+    tokens.append(Token("keyword","let"))
+    tokens.append(Token("identifier","x"))
+    tokens.append(Token("symbol","["))
+    tokens.append(Token("identifier","ix"))
+    tokens.append(Token("symbol","]"))
+    tokens.append(Token("symbol","="))
+    tokens.append(Token("identifier","y"))
+    
     
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileIf()
+        result = parser.compileLet()
         print(result)
     except ParseException:
         print("Error Parsing!")
