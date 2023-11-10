@@ -405,30 +405,7 @@ class CompilerParser :
         Generates a parse tree for an expression
         @return a ParseTree that represents the expression
         """
-        tree = ParseTree("expression","")
-        while self.tokens != []:
-            if self.current().value == ")":
-                self.next()
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                self.next()
-                if self.current().value == "{":
-                    node = self.current()
-                    child = ParseTree(node.node_type, node.value)
-                    tree.addChild(child)
-                    self.next()
-                    tree.addChild(self.compileStatements())
-                break
-            elif self.current().value == "skip":
-                tree.addChild(self.compileTerm())
-            else:
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                prev_node = node
-                self.next()
-        return tree
+        return None
 
 
     def compileTerm(self):
@@ -436,30 +413,7 @@ class CompilerParser :
         Generates a parse tree for an expression term
         @return a ParseTree that represents the expression term
         """
-        tree = ParseTree("term","")
-        while self.tokens != []:
-            if self.current().value == ")":
-                self.next()
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                self.next()
-                if self.current().value == "{":
-                    node = self.current()
-                    child = ParseTree(node.node_type, node.value)
-                    tree.addChild(child)
-                    self.next()
-                    tree.addChild(self.compileStatements())
-                break
-            elif self.current().value == "skip":
-                tree.addChild(self.compileExpression())
-            else:
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                prev_node = node
-                self.next()
-        return None 
+        return None
 
 
     def compileExpressionList(self):
@@ -467,29 +421,6 @@ class CompilerParser :
         Generates a parse tree for an expression list
         @return a ParseTree that represents the expression list
         """
-        tree = ParseTree("expressionList","")
-        while self.tokens != []:
-            if self.current().value == ")":
-                self.next()
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                self.next()
-                if self.current().value == "{":
-                    node = self.current()
-                    child = ParseTree(node.node_type, node.value)
-                    tree.addChild(child)
-                    self.next()
-                    tree.addChild(self.compileStatements())
-                break
-            elif self.current().value == "skip":
-                tree.addChild(self.compileExpression())
-            else:
-                node = self.current()
-                child = ParseTree(node.node_type, node.value)
-                tree.addChild(child)
-                prev_node = node
-                self.next()
         return None 
 
 
@@ -544,13 +475,14 @@ if __name__ == "__main__":
     """
     tokens = []
 
-    # while ( skip ) { }  
-    tokens.append(Token("keyword","while"))
+    # 1 + ( a - b )
+    tokens.append(Token("integerConstant","1"))
+    tokens.append(Token("symbol","+"))
     tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","skip"))
+    tokens.append(Token("identifier","a"))
+    tokens.append(Token("symbol","-"))
+    tokens.append(Token("identifier","b"))
     tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
         result = parser.compileWhile()
