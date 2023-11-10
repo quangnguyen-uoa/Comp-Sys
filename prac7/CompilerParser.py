@@ -406,10 +406,28 @@ class CompilerParser :
         @return a ParseTree that represents the expression
         """
         tree = ParseTree("expression","")
-        node = self.current()
-        child = ParseTree(node.node_type, node.value)
-        tree.addChild(child)
-        self.next()
+        while self.tokens != []:
+            if self.current().value == ")":
+                self.next()
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                if self.current().value == "{":
+                    node = self.current()
+                    child = ParseTree(node.node_type, node.value)
+                    tree.addChild(child)
+                    self.next()
+                    tree.addChild(self.compileStatements())
+                break
+            elif self.current().value == "skip":
+                tree.addChild(self.compileTerm())
+            else:
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                prev_node = node
+                self.next()
         return tree
 
 
@@ -418,6 +436,29 @@ class CompilerParser :
         Generates a parse tree for an expression term
         @return a ParseTree that represents the expression term
         """
+        tree = ParseTree("term","")
+        while self.tokens != []:
+            if self.current().value == ")":
+                self.next()
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                if self.current().value == "{":
+                    node = self.current()
+                    child = ParseTree(node.node_type, node.value)
+                    tree.addChild(child)
+                    self.next()
+                    tree.addChild(self.compileStatements())
+                break
+            elif self.current().value == "skip":
+                tree.addChild(self.compileExpression())
+            else:
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                prev_node = node
+                self.next()
         return None 
 
 
@@ -426,6 +467,29 @@ class CompilerParser :
         Generates a parse tree for an expression list
         @return a ParseTree that represents the expression list
         """
+        tree = ParseTree("expressionList","")
+        while self.tokens != []:
+            if self.current().value == ")":
+                self.next()
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                if self.current().value == "{":
+                    node = self.current()
+                    child = ParseTree(node.node_type, node.value)
+                    tree.addChild(child)
+                    self.next()
+                    tree.addChild(self.compileStatements())
+                break
+            elif self.current().value == "skip":
+                tree.addChild(self.compileExpression())
+            else:
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                prev_node = node
+                self.next()
         return None 
 
 
