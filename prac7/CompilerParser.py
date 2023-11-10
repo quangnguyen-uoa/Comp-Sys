@@ -380,7 +380,24 @@ class CompilerParser :
         Generates a parse tree for a return statement
         @return a ParseTree that represents the statement
         """
-        return None 
+        tree = ParseTree("returnStatement","")
+        while self.tokens != []:
+            if self.current().value == ";":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                break
+            elif self.current().value == "skip":
+                tree.addChild(self.compileExpression())
+            if len(self.tokens) == 0:
+                break
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            prev_node = node
+            self.next()
+        return tree
 
 
     def compileExpression(self):
