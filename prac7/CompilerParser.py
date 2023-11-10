@@ -226,7 +226,7 @@ class CompilerParser :
             elif self.current().value == "return":
                 tree.addChild(self.compileReturn())
             elif self.current().value == "}":
-                self.next()
+                # self.next()
                 break
             else:
                 print(self.current().value)
@@ -267,6 +267,12 @@ class CompilerParser :
         """
         tree = ParseTree("ifStatement","")
         while self.tokens != []:
+            # if self.current().value == "}" and prev_node.value == "{":
+            #     tree.addChild(self.compileStatements())
+            #     node = self.current()
+            #     child = ParseTree(node.node_type, node.value)
+            #     tree.addChild(child)
+            #     break
             if len(self.tokens) == 0:
                 break
             if self.current().value == "else":
@@ -282,6 +288,19 @@ class CompilerParser :
                     self.next()
                 tree.addChild(self.compileStatements())
                 # break
+            elif self.current().value == ")":
+                #  self.next()
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                if self.current().value == "{":
+                    node = self.current()
+                    child = ParseTree(node.node_type, node.value)
+                    tree.addChild(child)
+                    self.next()
+                    tree.addChild(self.compileStatements())
+                
             elif self.current().value == "skip":
                 tree.addChild(self.compileExpression())
             else:
@@ -438,28 +457,29 @@ if __name__ == "__main__":
     tokens.append(Token("keyword","skip"))
     tokens.append(Token("symbol",")"))
     tokens.append(Token("symbol","{"))
-    tokens.append(Token("keyword","if"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","skip"))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
     tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","else"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","else"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("keyword","if"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","skip"))  
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("keyword","else"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
-    tokens.append(Token("symbol","}"))
+    # tokens.append(Token("keyword","if"))
+    # tokens.append(Token("symbol","("))
+    # tokens.append(Token("keyword","skip"))
+    # tokens.append(Token("symbol",")"))
+    # tokens.append(Token("symbol","{"))
+    # tokens.append(Token("symbol","}"))
+    # tokens.append(Token("keyword","else"))
+    # tokens.append(Token("symbol","{"))
+    # tokens.append(Token("symbol","}"))
+    # tokens.append(Token("symbol","}"))
+    # tokens.append(Token("keyword","else"))
+    # tokens.append(Token("symbol","{"))
+    # tokens.append(Token("keyword","if"))
+    # tokens.append(Token("symbol","("))
+    # tokens.append(Token("keyword","skip"))  
+    # tokens.append(Token("symbol",")"))
+    # tokens.append(Token("symbol","{"))
+    # tokens.append(Token("symbol","}"))
+    # tokens.append(Token("keyword","else"))
+    # tokens.append(Token("symbol","{"))
+    # tokens.append(Token("symbol","}"))
+    # tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
         result = parser.compileIf()
