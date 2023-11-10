@@ -405,7 +405,12 @@ class CompilerParser :
         Generates a parse tree for an expression
         @return a ParseTree that represents the expression
         """
-        return None
+        tree = ParseTree("expression","")
+        node = self.current()
+        child = ParseTree(node.node_type, node.value)
+        tree.addChild(child)
+        self.next()
+        return tree
 
 
     def compileTerm(self):
@@ -413,7 +418,7 @@ class CompilerParser :
         Generates a parse tree for an expression term
         @return a ParseTree that represents the expression term
         """
-        return None
+        return None 
 
 
     def compileExpressionList(self):
@@ -475,14 +480,13 @@ if __name__ == "__main__":
     """
     tokens = []
 
-    # 1 + ( a - b )
-    tokens.append(Token("integerConstant","1"))
-    tokens.append(Token("symbol","+"))
+    # while ( skip ) { }  
+    tokens.append(Token("keyword","while"))
     tokens.append(Token("symbol","("))
-    tokens.append(Token("identifier","a"))
-    tokens.append(Token("symbol","-"))
-    tokens.append(Token("identifier","b"))
+    tokens.append(Token("keyword","skip"))
     tokens.append(Token("symbol",")"))
+    tokens.append(Token("symbol","{"))
+    tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
         result = parser.compileWhile()
