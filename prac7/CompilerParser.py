@@ -329,6 +329,18 @@ class CompilerParser :
                 break
             if self.current().value == "skip":
                 tree.addChild(self.compileExpression())
+            elif self.current().value == ")":
+                #  self.next()
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                if self.current().value == "{":
+                    node = self.current()
+                    child = ParseTree(node.node_type, node.value)
+                    tree.addChild(child)
+                    self.next()
+                    tree.addChild(self.compileStatements())
             else:
                 node = self.current()
                 child = ParseTree(node.node_type, node.value)
@@ -454,13 +466,13 @@ if __name__ == "__main__":
     # while ( skip ) { }  
     tokens.append(Token("keyword","while"))
     tokens.append(Token("symbol","("))
-    tokens.append(Token("identifier","skip"))
+    tokens.append(Token("keyword","skip"))
     tokens.append(Token("symbol",")"))
     tokens.append(Token("symbol","{"))
     tokens.append(Token("symbol","}"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileIf()
+        result = parser.compileWhile()
         print(result)
     except ParseException:
         print("Error Parsing!")
