@@ -514,7 +514,7 @@ class CompilerParser :
             tree.addChild(self.compileExpression())
         return tree
 
-    def is_ops(symbol):
+    def is_ops(self, symbol):
         return symbol in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
     
     def next(self):
@@ -568,14 +568,22 @@ if __name__ == "__main__":
     """
     tokens = []
 
-    # 1 + ( a - b )
-    tokens.append(Token("integerConstant", "1"))
-    tokens.append(Token("symbol", "+"))
-    tokens.append(Token("symbol", "("))
-    tokens.append(Token("symbol", "a"))
-    tokens.append(Token("symbol", "-"))
-    tokens.append(Token("symbol", "b"))
-    tokens.append(Token("symbol", ")"))
+    # ( ( a + ( 1 - c ) ) > 5 ) = true 
+    tokens.append(Token("symbol","("))
+    tokens.append(Token("symbol","("))
+    tokens.append(Token("identifier","a"))
+    tokens.append(Token("symbol","+"))
+    tokens.append(Token("symbol","("))
+    tokens.append(Token("integerConstant","1"))
+    tokens.append(Token("symbol","-"))
+    tokens.append(Token("identifier","c"))
+    tokens.append(Token("symbol",")"))
+    tokens.append(Token("symbol",")"))
+    tokens.append(Token("symbol",">"))
+    tokens.append(Token("integerConstant","5"))
+    tokens.append(Token("symbol",")"))
+    tokens.append(Token("symbol","="))
+    tokens.append(Token("keyword","true"))
     parser = CompilerParser(tokens)
     try:
         result = parser.compileExpression()
