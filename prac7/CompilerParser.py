@@ -407,9 +407,18 @@ class CompilerParser :
         """
         tree = ParseTree("expression","")
         node = self.current()
-        child = ParseTree(node.node_type, node.value)
-        tree.addChild(child)
-        self.next()
+        if node.value == "skip":
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+        else:
+            tree.addChild(self.compileTerm())
+            while node.node_type == "symbol" and self.is_ops(node.value):
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                tree.addChild(self.compileTerm())
+                node = self.current()
         return tree
 
 
@@ -418,7 +427,73 @@ class CompilerParser :
         Generates a parse tree for an expression term
         @return a ParseTree that represents the expression term
         """
-        return None 
+        tree = ParseTree("term","")
+        node = self.current()
+        if node.node_type == "integerConstant" or node.node_type == "stringConstant" or node.node_type == "keyword":
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+        elif node.node_type == "identifier":
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+            if self.current().value == "[":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                tree.addChild(self.compileExpression())
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+            elif self.current().value == "(":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                tree.addChild(self.compileExpressionList())
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+            elif self.current().value == ".":
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+                tree.addChild(self.compileExpressionList())
+                node = self.current()
+                child = ParseTree(node.node_type, node.value)
+                tree.addChild(child)
+                self.next()
+        elif node.value == "(": 
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+            tree.addChild(self.compileExpression())
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+        elif node.value == "-" or node.value == "~":
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+            tree.addChild(self.compileTerm())
+        else:
+            raise ParseException("Invalid")
+        return tree
 
 
     def compileExpressionList(self):
@@ -426,9 +501,22 @@ class CompilerParser :
         Generates a parse tree for an expression list
         @return a ParseTree that represents the expression list
         """
-        return None 
+        tree = ParseTree("expressionList","")
+        node = self.current()
+        if node.value == ")":
+            return tree
+        tree.addChild(self.compileExpression())
+        while self.current().value == ",":
+            node = self.current()
+            child = ParseTree(node.node_type, node.value)
+            tree.addChild(child)
+            self.next()
+            tree.addChild(self.compileExpression())
+        return tree
 
-
+    def is_ops(symbol):
+        return symbol in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
+    
     def next(self):
         """
         Advance to the next token
@@ -480,16 +568,17 @@ if __name__ == "__main__":
     """
     tokens = []
 
-    # while ( skip ) { }  
-    tokens.append(Token("keyword","while"))
-    tokens.append(Token("symbol","("))
-    tokens.append(Token("keyword","skip"))
-    tokens.append(Token("symbol",")"))
-    tokens.append(Token("symbol","{"))
-    tokens.append(Token("symbol","}"))
+    # 1 + ( a - b )
+    tokens.append(Token("integerConstant", "1"))
+    tokens.append(Token("symbol", "+"))
+    tokens.append(Token("symbol", "("))
+    tokens.append(Token("symbol", "a"))
+    tokens.append(Token("symbol", "-"))
+    tokens.append(Token("symbol", "b"))
+    tokens.append(Token("symbol", ")"))
     parser = CompilerParser(tokens)
     try:
-        result = parser.compileWhile()
+        result = parser.compileExpression()
         print(result)
     except ParseException:
         print("Error Parsing!")
