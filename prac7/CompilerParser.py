@@ -406,19 +406,32 @@ class CompilerParser :
         @return a ParseTree that represents the expression
         """
         tree = ParseTree("expression","")
-        node = self.current()
-        if node.value == "skip":
-            child = ParseTree(node.node_type, node.value)
+        if self.current().value == "skip":
+            child = ParseTree(self.current().node_type, self.current().value)
             tree.addChild(child)
             self.next()
         else:
-            tree.addChild(self.compileTerm())
-            while node.node_type == "symbol" and self.is_ops(node.value):
-                child = ParseTree(node.node_type, node.value)
+            # if len(self.tokens) == 0:
+            #     return tree
+            # else:
+            #     tree.addChild(self.compileTerm())
+            if len(self.tokens) == 0:
+                return tree
+            while self.current().node_type == "symbol" or self.current().node_type == "keyword" :
+                if len(self.tokens) == 0:
+                    break
+                child = ParseTree(self.current().node_type, self.current().value)
                 tree.addChild(child)
                 self.next()
-                tree.addChild(self.compileTerm())
-                node = self.current()
+                if len(self.tokens) == 0:
+                    break
+                if self.current().value == ")" or self.current().value == "=":
+                    child = ParseTree(self.current().node_type, self.current().value)
+                    tree.addChild(child)
+                    self.next()
+                    continue
+                if len(self.tokens) > 0:
+                    tree.addChild(self.compileTerm())
         return tree
 
 
@@ -481,6 +494,8 @@ class CompilerParser :
             tree.addChild(child)
             self.next()
             tree.addChild(self.compileExpression())
+            if len(self.tokens) == 0:
+                return tree
             node = self.current()
             child = ParseTree(node.node_type, node.value)
             tree.addChild(child)
